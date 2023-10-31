@@ -8,8 +8,8 @@
     "deploy": "pnpm run build && gh-pages -d dist",
     "build": "vite build",
     "preview": "vite preview",
-    "lint:style": "eslint --fix main.js",
-    "lint:formatting": "prettier --write main.js",
+    "lint:style": "eslint --fix --ext .js",
+    "lint:formatting": "prettier --write '**/*.js' 'index.html'",
     "lint": "pnpm run lint:style && pnpm run lint:formatting"
   },
   "devDependencies": {
