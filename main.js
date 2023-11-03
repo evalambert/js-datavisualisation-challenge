@@ -1,25 +1,13 @@
-// // Créez un élément <div> + attribuer id 
-// const canvasWrapper = document.createElement('div');
-// canvasWrapper.id = 'wrapper-canvas'
 
-// // Selectioner le tableau + Insérez la <div> avant le tableau
-// const table = document.getElementById('table1')
-// table.parentNode.insertBefore(canvasWrapper, table)
-
-// // Créez un élément <canvas>  + Insérer à l'interieur de la <div>
-// const canvas = document.createElement('canvas')
-// canvas.id = 'myChart'
-// canvasWrapper.appendChild(canvas)
-
-
+// GRAPHIQUE CHART.JS /////////////////////////////////////////
 // const ctx = document.getElementById('myChart');
 
 //   new Chart(ctx, {
 //     type: 'bar',
 //     data: {
-//       labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+//       labels: ['France', 'Portugal', 'Italie', 'Belgique', 'Espagne'],
 //       datasets: [{
-//         label: '# of Votes',
+//         label: '2020',
 //         data: [12, 19, 3, 5, 2, 3],
 //         borderWidth: 1
 //       }]
@@ -35,67 +23,82 @@
 
 
 
+// Créez un élément <div> pour contenir le graphique
+const canvasWrapper = document.createElement('div');
+canvasWrapper.id = 'wrapper-canvas';
+const tableOne = document.getElementById('table1'); 
+tableOne.parentNode.insertBefore(canvasWrapper, tableOne); 
 
+// Créez un élément <canvas> à l'intérieur de la <div>
+const canvas = document.createElement('canvas');
+canvas.id = 'myChart';
+canvasWrapper.appendChild(canvas);
 
-// Récupérez le tableau
-const tableau = document.getElementById("table1");
+// Extraction des années depuis la première ligne du tableau
+const yearsElements = tableOne.querySelectorAll('tbody tr:nth-child(1) th');
+const years = Array.from(yearsElements).slice(2).map(element => element.textContent.trim());
 
-// Initialisez des tableaux vides pour les étiquettes et les données
-const labels = [];
-const data = [];
+console.log(years);
 
-// Parcourez les lignes du tableau à partir de la deuxième ligne (index 1)
-for (let i = 1; i < tableau.rows.length; i++) {
-    const row = tableau.rows[i];
-    const country = row.cells[1].textContent;
-    const values = [];
-
-    // Parcourez les cellules de données (à partir de la troisième cellule, index 2)
-    for (let j = 2; j < row.cells.length; j++) {
-        const value = parseFloat(row.cells[j].textContent.replace(",", ".")); // Convertissez la virgule en point pour les nombres
-        values.push(value);
-    }
-
-    labels.push(country);
-    data.push(values);
-}
-
-// Créez un tableau de jeux de données pour Chart.js
-const datasets = data.map((values, index) => ({
-    label: labels[index],
-    data: values,
-    backgroundColor: getRandomColor(), // Fonction pour générer une couleur aléatoire
-}));
-
-// Créez un graphique à barres
-const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: datasets,
-    },
-    options: {
-        responsive: true,
-        scales: {
-            x: {
-                stacked: true,
-            },
-            y: {
-                stacked: true,
-            },
-        },
-    },
+// Extraction des noms de pays
+const rows = tableOne.querySelectorAll('tbody tr');
+const countries = [];
+rows.forEach(row => {
+  const countriesElements = row.querySelector('td');
+  if (countriesElements) {
+    countries.push(countriesElements.textContent.trim());
+  }
 });
 
-// Fonction pour générer une couleur aléatoire
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+console.log(countries);
+
+// Extraction des données des pays (sauf la première cellule)
+const dataCountries = [];
+rows.forEach(row => {
+  const cells = Array.from(row.querySelectorAll('td'));
+  const rowData = cells.slice(1).map(cell => parseFloat(cell.textContent.trim())); // Convertir en nombre si nécessaire
+  dataCountries.push(rowData);
+});
+
+console.log(dataCountries);
+
+
+
+// Créez un tableau pour stocker les données dans le format requis par Chart.js
+const chartData = {
+  labels: countries, // Les noms de pays en tant qu'étiquettes
+  datasets: years.map((year, index) => {
+    return {
+      label: year,
+      data: dataCountries.map(data => data[index]), // Inversez les données pour les années
+      backgroundColor: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`, // Couleur aléatoire
+      borderColor: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},1)`, // Couleur aléatoire
+      borderWidth: 1
+    };
+  })
+};
+
+// Obtenez le contexte du canvas
+const ctx = canvas.getContext('2d');
+
+// Créez un graphique à barres avec Chart.js
+const myChart = new Chart(ctx, {
+  type: 'bar',
+  data: chartData,
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
     }
-    return color;
-}
+  }
+});
+
+
+
+
+
+
+
 
 
