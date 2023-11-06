@@ -23,6 +23,10 @@
 
 
 
+
+
+
+
 // Créez un élément <div> pour contenir le graphique
 const canvasWrapper = document.createElement('div');
 canvasWrapper.id = 'wrapper-canvas';
@@ -62,43 +66,7 @@ rows.forEach(row => {
 
 console.log(dataCountries);
 
-
-
-// Créez un tableau pour stocker les données dans le format requis par Chart.js
-const chartData = {
-  labels: countries, // Les noms de pays en tant qu'étiquettes
-  datasets: years.map((year, index) => {
-    return {
-      label: year,
-      data: dataCountries.map(data => data[index]), // Inversez les données pour les années
-      backgroundColor: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`, // Couleur aléatoire
-      borderColor: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},1)`, // Couleur aléatoire
-      borderWidth: 1
-    };
-  })
-};
-
-// Obtenez le contexte du canvas
-const ctx = canvas.getContext('2d');
-
-// Créez un graphique à barres avec Chart.js
-const myChart = new Chart(ctx, {
-  type: 'bar',
-  data: chartData,
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-});
-
-
-
-
-
-
-
+// const tableOne = document.getElementById('table1')
+// const rows = tableOne.querySelectorAll('tbody tr')
 
 
