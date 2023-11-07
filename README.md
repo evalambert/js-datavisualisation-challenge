@@ -2,7 +2,7 @@
 
 ## 🔗 LIENS PROJET
 
-- **Projet en ligne :** [https://evalambert.io/js-datavisualisation-challenge/](https://evalambert.io/js-datavisualisation-challenge/ "lien projet js-datavisualisation-challenge en ligne")
+- **Projet en ligne :** [https://evalambert.github.io/js-datavisualisation-challenge/](https://evalambert.github.io/js-datavisualisation-challenge/ "lien projet js-datavisualisation-challenge en ligne")
 
 
 ## 📌 FICHE PROJET
