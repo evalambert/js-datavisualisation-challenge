@@ -175,87 +175,108 @@ new Chart(ctxTwo, {
 ///////////////////////////////////// TABLEAU 3  /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
+// Attendre que le document soit complètement chargé avant d'exécuter le code 
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // Création d'un tableau vide pour stocker les données du graphique
+  var dataPoints = [];
+  var chart; // Variable pour stocker l'instance du graphique
 
+
+
+    /////////////////////////////
+   // CRÉATION DIV + CANVAS_3 //
   /////////////////////////////
- // CRÉATION DIV + CANVAS_3 //
-/////////////////////////////
 
 
-// Création <DIV> #WRAPPER-CANVAS-THREE
-const wrapperCanvasThree = document.createElement('div');
-wrapperCanvasThree.id = 'wrapper-canvas-three';
+  // Création <DIV> #WRAPPER-CANVAS-THREE
+  const wrapperCanvasThree = document.createElement('div');
+  wrapperCanvasThree.id = 'wrapper-canvas-three';
 
-// Insersion <DIV> #WRAPPER-CANVAS-THREE
-const h1Element = document.getElementById('firstHeading');
-h1Element.parentNode.insertBefore(wrapperCanvasThree, h1Element);
+  // Insersion <DIV> #WRAPPER-CANVAS-THREE
+  const h1Element = document.getElementById('firstHeading');
+  h1Element.parentNode.insertBefore(wrapperCanvasThree, h1Element);
 
-// Création + Insersion <CANVAS> #myChart-3
-const canvasThree = document.createElement('canvas');
-canvasThree.id = 'myChart-3';
-wrapperCanvasThree.appendChild(canvasThree);
-
-// Création <BUTTON> 
-const btnCanvas = document.createElement('button');
-btnCanvas.id = 'btnFetch';
-btnCanvas.innerText = 'Fetch';
-btnCanvas.addEventListener('click', updateChart);
-canvasThree.insertAdjacentElement('afterend', btnCanvas);
-
-
-   ///////////////////////////
-  // FETCH //////////////////
- // EXTRACTION DONNÉES /////
-///////////////////////////
-
-
-async function fetchData() {
-  const url = "https://canvasjs.com/services/data/datapoints.php?cb=${cachebuster}";
-  const response = await fetch(url);
-  const dataPoints = await response.json();
-  return dataPoints;
-}
-
-function updateChart() {
-  fetchData().then(dataPoints => {
-    const dataX = dataPoints.map(index => index[0]);
-    const dataY = dataPoints.map(index => index[1]);
-    
-    console.log(dataX);
-    console.log(dataY);
-
-    myChartTree.data.labels = dataX;
-    myChartTree.data.datasets[0].data = dataY;
-
-    myChartTree.update();
-  });
-}
-
-
-  /////////////////////////////////
- // GRAPHIQUE_3 CHART.JS /////////
-/////////////////////////////////
-
-
-const ctxThree = document.getElementById('myChart-3').getContext('2d');
-
-const myChartTree = new Chart(ctxThree, {
-  type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Data point',
-        data: [],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+  // Création + Insersion <CANVAS> #myChart-3
+  const canvasThree = document.createElement('canvas');
+  canvasThree.id = 'myChart-3';
+  wrapperCanvasThree.appendChild(canvasThree);
 
 
 
+     ///////////////////////////
+    // FETCH //////////////////
+   // EXTRACTION DONNÉES /////
+  ///////////////////////////
+
+
+  // Étape 1 : Obtention des données initiales depuis une source JSON externe
+  fetch("https://canvasjs.com/services/data/datapoints.php?xstart=1&ystart=10&length=10&type=json")
+      .then(response => response.json())
+      .then(data => {
+          // Extraction des données JSON et création des dataPoints
+          data.forEach(function(value) {
+              dataPoints.push({ x: value[0], y: parseInt(value[1]) });
+          });
+
+
+
+            /////////////////////////////////
+           // GRAPHIQUE_2 CHART.JS /////////
+          /////////////////////////////////
+
+
+          // Création du graphique initial avec les données initiales
+          chart = new Chart(document.getElementById("myChart-3"), {
+              type: 'line',
+              data: {
+                  datasets: [{
+                      label: 'Données en temps réel',
+                      data: dataPoints,
+                      borderColor: 'blue',
+                      fill: false
+                  }]
+              },
+              options: {
+                  scales: {
+                      x: {
+                          type: 'linear',
+                          position: 'bottom'
+                      },
+                      y: {
+                          beginAtZero: true
+                      }
+                  }
+              }
+          });
+
+          // Appel de la fonction pour mettre à jour le graphique périodiquement
+          updateChart();
+      });
+
+
+      
+     ////////////////////////////
+    // UPDATE //////////////////
+   // MISE A JOUR DONNÉES /////
+  ////////////////////////////
+
+
+  function updateChart() {
+      // Requête fetch pour obtenir de nouvelles données depuis l'URL
+      fetch("https://canvasjs.com/services/data/datapoints.php?xstart=" + (dataPoints.length + 1) + "&ystart=" + dataPoints[dataPoints.length - 1].y + "&length=1&type=json")
+          .then(response => response.json())
+          .then(data => {
+              // Extraction des nouvelles données et ajout aux dataPoints
+              data.forEach(function(value) {
+                  dataPoints.push({ x: parseInt(value[0]), y: parseInt(value[1]) });
+              });
+
+              // Mise à jour du graphique
+              chart.update();
+
+              // Planification de la prochaine mise à jour après 1 seconde
+              setTimeout(updateChart, 1000);
+          });
+  }
+});
