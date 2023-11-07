@@ -117,9 +117,9 @@ canvasTwo.id = 'myChart-2'
 wrapperCanvasTwo.appendChild(canvasTwo)
 
 
-  /////////////////////////////////
- // EXTRACTION DONNÉES TABLEAUX //
-/////////////////////////////////
+  ///////////////////////////////////
+ // EXTRACTION DONNÉES TABLEAUX_2 //
+///////////////////////////////////
 
 
 let countriesTwo = []
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
      ///////////////////////////
     // FETCH //////////////////
-   // EXTRACTION DONNÉES /////
+   // EXTRACTION DONNÉES_3 ///
   ///////////////////////////
 
 
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
             /////////////////////////////////
-           // GRAPHIQUE_2 CHART.JS /////////
+           // GRAPHIQUE_3 CHART.JS /////////
           /////////////////////////////////
 
 
@@ -255,15 +255,15 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
 
-      
+
      ////////////////////////////
     // UPDATE //////////////////
-   // MISE A JOUR DONNÉES /////
+   // MISE-À-JOUR DONNÉES /////
   ////////////////////////////
 
 
   function updateChart() {
-      // Requête fetch pour obtenir de nouvelles données depuis l'URL
+      // Nouvelle requête fetch pour obtenir de nouvelles données depuis l'URL
       fetch("https://canvasjs.com/services/data/datapoints.php?xstart=" + (dataPoints.length + 1) + "&ystart=" + dataPoints[dataPoints.length - 1].y + "&length=1&type=json")
           .then(response => response.json())
           .then(data => {
@@ -279,4 +279,5 @@ document.addEventListener('DOMContentLoaded', function() {
               setTimeout(updateChart, 1000);
           });
   }
+
 });
